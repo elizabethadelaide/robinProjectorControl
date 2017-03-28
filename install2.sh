@@ -11,15 +11,16 @@ command -v python3 >/dev/null 2>&1 || brew install python3
 #install py2app
 pip3 install -U git+https://github.com/metachris/py2app.git@master
 
-#install tkinter (double check)
+#install tkinter 
 brew install python3-tk
 
+#install serial libary
 pip3 install pyserial
 
 #install 
 py2applet --make-setup projectorControl.py
 python3 setup.py py2app
 
-ln -s dist/projectorControl.app projectorControl.app
+ln -s dist/projectorControl.app projectorControlApp.app
 
 chmod 777 projectorControl.app
