@@ -1,12 +1,15 @@
+#!/bin/env/python3
+
 import serial
 import sys
 import glob
 import re
 from tkinter import *
 
-//Elizabeth Adelaide, March 2017
-//Comissioned by Robin Cameron
-//Python GUI for interfacing with arduino system using serial communication
+#Elizabeth Adelaide, March 2017
+#Comissioned by Robin Cameron
+#Python GUI for interfacing with arduino system using serial communication
+#Full code and documentation can be found here: https://github.com/elizabethadelaide/robinProjectorControl
 
 def serial_ports():
     """ Lists serial port names
@@ -21,7 +24,7 @@ def serial_ports():
     elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
         # this excludes your current terminal "/dev/tty"
         ports = glob.glob('/dev/tty[A-Za-z]*')
-        ports.extend(glob.glob('/dev/pts/*')) #for virtual ports
+       # ports.extend(glob.glob('/dev/pts/*')) #for virtual ports
     elif sys.platform.startswith('darwin'):
         ports = glob.glob('/dev/tty.*')
     else:
@@ -81,19 +84,19 @@ class GUI(Frame):
 		self.TitleLabel = Label(master, text="Projector Control")
 		self.TitleLabel.grid(column=0, row=0)
 
-		self.cascadeLabel = Label(master, text="Cascade Time (ms)")
+		self.cascadeLabel = Label(master, text="Cascade Time (s)")
 		self.cascadeLabel.grid(column=0, row=3)
 
 		self.cascadeEntry = Entry(master)
 		self.cascadeEntry.grid(column=1, row=3)
-		self.cascadeEntry.insert(END, "1000")
+		self.cascadeEntry.insert(END, "1")
 
-		self.cycleLabel = Label(master, text="Cycle Time (ms)")
+		self.cycleLabel = Label(master, text="Cycle Time (s)")
 		self.cycleLabel.grid(column=2, row=3)
 
 		self.cycleEntry = Entry(master)
 		self.cycleEntry.grid(column=3, row=3)
-		self.cycleEntry.insert(END, "21000")
+		self.cycleEntry.insert(END, "21")
 
 		self.cascadeButton = Button(master, command=self.cascadeClick, text="Submit")
 		self.cascadeButton.grid(column=6, row=3)
@@ -113,10 +116,10 @@ class GUI(Frame):
 		self.advancedBool = 1
 		self.advancedButton.configure(bg="gray")
 		
-		self.clickLabel = Label(master, text="Click Time(ms)")
+		self.clickLabel = Label(master, text="Click Time(s)")
 		
 		self.clickEntry = Entry(master)
-		self.clickEntry.insert(END,"500")
+		self.clickEntry.insert(END,"0.5")
 		
 
 		self.stopButton.configure(bg="gray")
@@ -131,15 +134,18 @@ class GUI(Frame):
 
 	def cascadeClick(self):
 
-		casc = self.cascadeEntry.get()
-		cycle = self.cycleEntry.get()
-		click = self.clickEntry.get()
-	
-		if (casc.isdigit() and cycle.isdigit() and click.isdigit()):
-			cascnum = int(casc)
-			cyclenum = int(cycle)
-			clicktime = int(click)
+		casc = "0" + self.cascadeEntry.get()
+		cycle = "0" + self.cycleEntry.get()
+		click = "0" + self.clickEntry.get()
 
+		p = re.compile('\d*\.?\d+\Z') #reg expression to match float
+	
+		if (p.match(casc)!=None and p.match(cycle)!=None and p.match(click)!=None):
+			cascnum = (int)(1000.0*float(casc)) #convert to ms
+			cyclenum = (int)(1000.0*float(cycle))
+			clicktime = (int)(1000.0* float(click))
+
+			#check to make sure it is doable
 			if (cyclenum < clicktime*7):
 				cyclenum = clicktime*7
 				self.cycleEntry.config(textvariastr(cyclenum))
@@ -157,6 +163,10 @@ class GUI(Frame):
 			ser.write(b'\n')
 
 			print("Submitted")
+			self.cascadeButton.configure(bg="green")
+
+		else:
+			self.cascadeButton.configure(bg="red")
 			
 			
 	def resumeClick(self):
