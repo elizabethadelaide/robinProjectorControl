@@ -8,7 +8,7 @@ Download link for documenation pdf: <a href="https://github.com/elizabethadelaid
 
 <b>Arduino:</b>
 
-Download link for Arduino firmware: <a href="https://github.com/elizabethadelaide/robinProjectorControl/raw/master/arduinoProjectorControl.zip">https://github.com/elizabethadelaide/robinProjectorControl/raw/master/arduinoProjectorControl.zip</a>
+Download link for Arduino firmware: <a href="https://github.com/elizabethadelaide/robinProjectorControl/raw/master/arduinoControl.zip">https://github.com/elizabethadelaide/robinProjectorControl/raw/master/arduinoControl.zip</a>
 
 Download link for Arduino IDE (MAC): <a href="https://www.arduino.cc/download_handler.php?f=/arduino-1.8.2-macosx.zip">https://www.arduino.cc/download_handler.php?f=/arduino-1.8.2-macosx.zip</a>
 
