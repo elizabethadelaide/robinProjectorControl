@@ -49,6 +49,8 @@ void setup() {
     eeaddress = eeaddress + 1;
   }
   
+  delay(1000);
+  
   if (eeaddress == 28){ //correctly read/valid data
     eeaddress = 0;
     for (i = 0; i < NUMPROJS; i++){
@@ -64,6 +66,18 @@ void setup() {
       }
     }
   }
+  
+  //set up offsets:
+  //projector one starts at slide 7
+  //projector seven starts at slide one
+  for (i = NUMPROJS; i > 0; i--){
+    for (m = 0; m < i; m++){
+      digitalWrite(projectorPins[m], LOW);
+      delay(clickTime);
+      digitalWrite(projectorPins[m], HIGH);
+    }
+  }
+  
   
 }
 

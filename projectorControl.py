@@ -1,5 +1,3 @@
-#!/bin/env/python3
-
 import serial
 import sys
 import glob
@@ -24,7 +22,7 @@ def serial_ports():
     elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
         # this excludes your current terminal "/dev/tty"
         ports = glob.glob('/dev/tty[A-Za-z]*')
-       # ports.extend(glob.glob('/dev/pts/*')) #for virtual ports
+        ports.extend(glob.glob('/dev/pts/*')) #for virtual ports
     elif sys.platform.startswith('darwin'):
         ports = glob.glob('/dev/tty.*')
     else:
@@ -41,12 +39,12 @@ def serial_ports():
     return result
 
 
-if __name__ == '__main__':
-    print(serial_ports())
+#if __name__ == '__main__':
+  #  print(serial_ports())
 
 ports= serial_ports() #detect serial ports
-for x in range(len(ports)):
-	print(ports[x] + " " + str(x))
+#for x in range(len(ports)):
+#	print(ports[x] + " " + str(x))
 
 
 
@@ -54,6 +52,7 @@ class PortChoose(Frame): #initial select port GUI
 	def __init__(self, master=None):
 		Frame.__init__(self, master)
 		self.grid()
+
 
 		self.portLabel = Label(master, text="Choose port")
 		self.portLabel.grid(column=0, row=1)
@@ -84,22 +83,22 @@ class GUI(Frame):
 		self.TitleLabel = Label(master, text="Projector Control")
 		self.TitleLabel.grid(column=0, row=0)
 
-		self.cascadeLabel = Label(master, text="Cascade Time (s)")
+		self.cascadeLabel = Label(master, text="Time (s)")
 		self.cascadeLabel.grid(column=0, row=3)
 
 		self.cascadeEntry = Entry(master)
 		self.cascadeEntry.grid(column=1, row=3)
-		self.cascadeEntry.insert(END, "1")
+		self.cascadeEntry.insert(END, "1.00")
 
-		self.cycleLabel = Label(master, text="Cycle Time (s)")
-		self.cycleLabel.grid(column=2, row=3)
+		#self.cycleLabel = Label(master, text="Cycle Time (s)")
+		#self.cycleLabel.grid(column=2, row=3)
 
-		self.cycleEntry = Entry(master)
-		self.cycleEntry.grid(column=3, row=3)
-		self.cycleEntry.insert(END, "21")
+		#self.cycleEntry = Entry(master)
+		#self.cycleEntry.grid(column=3, row=3)
+		#self.cycleEntry.insert(END, "21")
 
 		self.cascadeButton = Button(master, command=self.cascadeClick, text="Submit")
-		self.cascadeButton.grid(column=6, row=3)
+		self.cascadeButton.grid(column=2, row=3)
 
 
 		self.stopButton = Button(master, command = self.stopClick, text="Stop")
@@ -135,15 +134,17 @@ class GUI(Frame):
 	def cascadeClick(self):
 
 		casc = "0" + self.cascadeEntry.get()
-		cycle = "0" + self.cycleEntry.get()
+		#cycle = "0" + self.cycleEntry.get()
 		click = "0" + self.clickEntry.get()
 
 		p = re.compile('\d*\.?\d+\Z') #reg expression to match float
 	
-		if (p.match(casc)!=None and p.match(cycle)!=None and p.match(click)!=None):
+		if (p.match(casc)!=None and p.match(click)!=None):
 			cascnum = (int)(1000.0*float(casc)) #convert to ms
-			cyclenum = (int)(1000.0*float(cycle))
+			#cyclenum = (int)(1000.0*float(cycle))
 			clicktime = (int)(1000.0* float(click))
+
+			cyclenum = 7*cascnum
 
 			#check to make sure it is doable
 			if (cyclenum < clicktime*7):
@@ -162,7 +163,11 @@ class GUI(Frame):
 			ser.write(num)
 			ser.write(b'\n')
 
-			print("Submitted")
+			#print("Submitted casc = ")
+			#print(cascnum)
+			#print(" cycle = ")
+			#print(cyclenum)
+			#print("\n")
 			self.cascadeButton.configure(bg="green")
 
 		else:
