@@ -66,7 +66,17 @@ void setup() {
       }
     }
   }
+
   
+  
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  int i; int m;
+  int ind;
+  
+    
   //set up offsets:
   //projector one starts at slide 7
   //projector seven starts at slide one
@@ -78,48 +88,43 @@ void setup() {
     }
   }
   
+  while(1){
   
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-  int i;
-  int ind;
-  
-  //go through each projector:
-  for (i = 0; i < NUMPROJS; i++){
-    receiveData();
-    ind = processData(i);
-    showNewData();
-  
-    //Serial.print("Ind: ");
-    Serial.print(ind, DEC);
-    Serial.print("\n");
-    //Serial.println(i);
+    //go through each projector:
+    for (i = 0; i < NUMPROJS; i++){
+      receiveData();
+      ind = processData(i);
+      showNewData();
     
-    switch(ind){
-      case 10: //stop
-        ind = stopProj();
-        i = 0;
-        break; 
-      case 13: //rewrite times
-        Serial.println("Rewrite");
-        rewriteTimes();
-        break;
-      case 11: //pause
-        ind = stopProj();
-        i = i;
-        break;
-     
-      default:
-    
-     break;
+      //Serial.print("Ind: ");
+      Serial.print(ind, DEC);
+      Serial.print("\n");
+      //Serial.println(i);
+      
+      switch(ind){
+        case 10: //stop
+          ind = stopProj();
+          i = 0;
+          break; 
+        case 13: //rewrite times
+          Serial.println("Rewrite");
+          rewriteTimes();
+          break;
+        case 11: //pause
+          ind = stopProj();
+          i = i;
+          break;
+       
+        default:
+      
+       break;
+      }
+      digitalWrite(projectorPins[i], LOW);
+          
+      delay(clickTime);//give enough time to click
+      digitalWrite(projectorPins[i], HIGH);
+      delay(timer[i]);
     }
-    digitalWrite(projectorPins[i], LOW);
-        
-    delay(clickTime);//give enough time to click
-    digitalWrite(projectorPins[i], HIGH);
-    delay(timer[i]);
   }
 }
 
